@@ -40,50 +40,46 @@ function Dropzone() {
   return () => files.forEach(file => URL.revokeObjectURL(file.preview));
   },[files]);
  
+
+  const handleUpload = () => {
+    const url = "https://api.cloudinary.com/v1_1/johnpaul/image/upload";
+    const formData = new FormData();
+    let file = files[0];
+    formData.append("file", file);
+    formData.append("upload_preset", "dryqolej");
+    fetch(url, {
+      method: "POST",
+      body: formData
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      });
+  };
+
   return (
     <div className="App">
       <div>
-      <div
-    {...getRootProps()}>
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p className="dropzone">Drop your image files here</p>
-          ) : (
-            <p className="dropzone">
-              Drag and drop some files here, or click to select files
-            </p>
-          )}
+        <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p className="dropzone">Drop your image files here</p>
+        ) : (
+          <p className="dropzone">
+            Drag and drop some files here, or click to select files
+          </p>
+        )}
         </div>
       </div>
       {files.length > 0 && (
-        <button className='button'
-          onClick={() => {
-            const url = "https://api.cloudinary.com/v1_1/johnpaul/image/upload";
-            const formData = new FormData();
-            let file = files[0];
-            formData.append("file", file);
-            formData.append("upload_preset", "dryqolej");
-            fetch(url, {
-              method: "POST",
-              body: formData
-            })
-              .then((response) => {
-                return response.json();
-              })
-              .then((data) => {
-                console.log(data);
-              });
-          }}
-        >
+        <button className="button" onClick={handleUpload}>
           Upload
         </button>
       )}
-
-      <aside>
-        {thumbs}
-      </aside>
+      <aside>{thumbs}</aside>
     </div>
   );
 }
-
 export default Dropzone;
